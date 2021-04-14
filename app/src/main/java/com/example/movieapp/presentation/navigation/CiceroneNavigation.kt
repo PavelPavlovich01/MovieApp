@@ -21,6 +21,7 @@ class CiceroneNavigation : Application() {
     private val myModule : Module = module {
         single { Cicerone.create(Router()) }
         single { get<Cicerone<Router>>().getNavigatorHolder() }
+        single { LocalCiceroneHolder() }
         single { get<Cicerone<Router>>().router}
     }
 }

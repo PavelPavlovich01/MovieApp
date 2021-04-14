@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.movieapp.R
+import com.example.movieapp.presentation.ui.fragments.movie.MoviePopularFragment
 
 class SettingsFragment : Fragment() {
 
@@ -16,13 +17,14 @@ class SettingsFragment : Fragment() {
     }
 
     companion object{
-        fun getInstance(): SettingsFragment {
+        private const val CONTAINER_NAME = "container_name"
 
-            /*val args = Bundle()
-            args.putInt(COUNTER, counter)
-            fragment.arguments = args*/
-
-            return SettingsFragment()
+        fun getNewInstance(name: String): SettingsFragment {
+            return SettingsFragment().apply {
+                arguments = Bundle().apply {
+                    putString(CONTAINER_NAME, name)
+                }
+            }
         }
     }
 }
