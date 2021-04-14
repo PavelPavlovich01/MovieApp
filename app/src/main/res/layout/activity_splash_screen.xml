@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_purple"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingTop="32dp">
+
+        <ImageView
+            android:layout_width="299dp"
+            android:layout_height="397dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/load_logo_discription"
+            android:src="@drawable/loading_logo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center">
+
+            <ImageView
+                android:id="@+id/dot_left"
+                android:layout_width="57dp"
+                android:layout_height="38dp"
+                android:layout_gravity="start"
+                android:layout_marginEnd="15dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/dot_icon_description"
+                android:src="@drawable/dot" />
+
+            <ImageView
+                android:id="@+id/dot_center"
+                android:layout_width="57dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/dot_icon_description"
+                android:src="@drawable/dot" />
+
+            <ImageView
+                android:id="@+id/dot_right"
+                android:layout_width="57dp"
+                android:layout_height="38dp"
+                android:layout_gravity="end"
+                android:layout_marginStart="15dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/dot_icon_description"
+                android:src="@drawable/dot" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:text="@string/loading_app"
+        android:textColor="@color/purple_500"
+        android:textSize="25sp" />
+
+</LinearLayout>
