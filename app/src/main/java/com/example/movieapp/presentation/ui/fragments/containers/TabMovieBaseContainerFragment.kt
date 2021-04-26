@@ -5,14 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.example.movieapp.R
-import com.example.movieapp.presentation.util.Screens
-import org.koin.android.ext.android.get
+import com.example.movieapp.presentation.ui.Screens
+import com.example.movieapp.presentation.ui.common.BackButtonListener
+import com.example.movieapp.presentation.ui.common.RouterProvider
+import com.example.movieapp.util.Constants
+import com.github.terrakok.cicerone.Back
 
-class TabMovieBaseContainerFragment : Fragment() {
+class TabMovieBaseContainerFragment : Fragment(), BackButtonListener {
     private lateinit var bottomNavigationBar: BottomNavigationBar
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -49,9 +51,9 @@ class TabMovieBaseContainerFragment : Fragment() {
         bottomNavigationBar.setTabSelectedListener(object : BottomNavigationBar.OnTabSelectedListener{
             override fun onTabSelected(position: Int) {
                 when(position){
-                    0 -> selectTab("COMING")
-                    1 -> selectTab("POPULAR")
-                    2 -> selectTab("FAVOURITE")
+                    0 -> selectTab(Constants.UPCOMING_TAB)
+                    1 -> selectTab(Constants.POPULAR_TAB)
+                    2 -> selectTab(Constants.FAVOURITE_TAB)
                 }
             }
 
@@ -92,13 +94,27 @@ class TabMovieBaseContainerFragment : Fragment() {
         transaction.commitNow()
     }
 
-    companion object {
-        private const val CONTAINER_NAME = "container_name"
+    override fun onBackPressed(): Boolean {
+        val fm = childFragmentManager
+        var fragment: Fragment? = null
+        for(fr in fm.fragments){
+            if(fr.isVisible)
+                fragment = fr
+        }
+        return if (fragment != null && fragment is BackButtonListener
+                && (fragment as BackButtonListener).onBackPressed()) {
+            true
+        } else {
+            (activity as RouterProvider?)!!.router.exit()
+            true
+        }
+    }
 
-        fun newInstance(tabName: String) =
+    companion object {
+        fun getInstance(tabName: String) =
             TabMovieBaseContainerFragment().apply {
                 arguments = Bundle().apply {
-                    putString(CONTAINER_NAME, tabName)
+                    putString(Constants.CONTAINER_NAME, tabName)
                 }
             }
     }

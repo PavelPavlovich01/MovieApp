@@ -8,7 +8,8 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.example.movieapp.R
 import com.example.movieapp.presentation.ui.common.BackButtonListener
 import com.example.movieapp.presentation.ui.common.RouterProvider
-import com.example.movieapp.presentation.util.Screens.tab
+import com.example.movieapp.presentation.ui.Screens.tab
+import com.example.movieapp.util.Constants
 import com.github.terrakok.cicerone.Router
 import org.koin.android.ext.android.inject
 
@@ -54,9 +55,9 @@ class MovieActivity : AppCompatActivity(), RouterProvider {
         bottomNavigationBar.setTabSelectedListener(object: BottomNavigationBar.OnTabSelectedListener{
             override fun onTabSelected(position: Int) {
                 when(position){
-                    0 -> selectTab("MOVIES")
-                    1 -> selectTab("PROFILE")
-                    2 -> selectTab("SETTINGS")
+                    0 -> selectTab(Constants.MOVIES_TAB)
+                    1 -> selectTab(Constants.PROFILE_TAB)
+                    2 -> selectTab(Constants.SETTINGS_TAB)
                 }
             }
 

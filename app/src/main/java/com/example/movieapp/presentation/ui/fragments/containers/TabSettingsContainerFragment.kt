@@ -9,32 +9,26 @@ import com.example.movieapp.R
 import com.example.movieapp.presentation.navigation.LocalCiceroneHolder
 import com.example.movieapp.presentation.ui.common.BackButtonListener
 import com.example.movieapp.presentation.ui.common.RouterProvider
-import com.example.movieapp.presentation.util.Screens
+import com.example.movieapp.presentation.ui.Screens
+import com.example.movieapp.util.Constants
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
 import org.koin.android.ext.android.inject
 
-class TabSettingsContainerFragment : Fragment(), RouterProvider, BackButtonListener{
-
-    private val navigator: Navigator by lazy {
+class TabSettingsContainerFragment : AbstractTabContainerFragment(){
+    override val navigator: Navigator by lazy {
         AppNavigator(requireActivity(), R.id.fragment_container_settings, childFragmentManager)
     }
 
-    private val ciceroneHolder: LocalCiceroneHolder by inject()
+    override val containerName: String
+        get() = requireArguments().getString(Constants.CONTAINER_NAME).toString()
 
-    private val containerName: String
-        get() = requireArguments().getString(CONTAINER_NAME).toString()
-
-    private val cicerone: Cicerone<Router>
+    override val cicerone: Cicerone<Router>
         get() = containerName.let { ciceroneHolder.getCicerone(it) }
 
-    override val router: Router
-        get() = cicerone.router
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_tab_settings_container, container, false)
     }
 
@@ -43,16 +37,6 @@ class TabSettingsContainerFragment : Fragment(), RouterProvider, BackButtonListe
         if (childFragmentManager.findFragmentById(R.id.fragment_container_settings) == null) {
             router.replaceScreen(Screens.settings(containerName))
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        cicerone.getNavigatorHolder().setNavigator(navigator)
-    }
-
-    override fun onPause() {
-        cicerone.getNavigatorHolder().removeNavigator()
-        super.onPause()
     }
 
     override fun onBackPressed(): Boolean {
@@ -67,12 +51,10 @@ class TabSettingsContainerFragment : Fragment(), RouterProvider, BackButtonListe
     }
 
     companion object {
-        private const val CONTAINER_NAME = "container_name"
-
-        fun newInstance(tabName: String) =
+        fun getInstance(tabName: String) =
             TabSettingsContainerFragment().apply {
                 arguments = Bundle().apply {
-                    putString(CONTAINER_NAME, tabName)
+                    putString(Constants.CONTAINER_NAME, tabName)
                 }
             }
     }

@@ -8,6 +8,7 @@ import android.widget.ImageView
 import com.example.movieapp.R
 
 class SplashScreenActivity : AppCompatActivity() {
+    //TODO("2 activity?")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)

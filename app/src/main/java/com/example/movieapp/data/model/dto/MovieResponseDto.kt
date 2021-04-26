@@ -1,0 +1,12 @@
+package com.example.movieapp.data.model.dto
+
+import com.squareup.moshi.Json
+
+data class MovieResponseDto (
+    @field:Json(name = "page")
+    val page: Int? = null,
+    @field:Json(name = "results")
+    val movies: List<MovieDto>? = null,
+    @field:Json(name = "total_pages")
+    val totalPages: Int? = null
+)

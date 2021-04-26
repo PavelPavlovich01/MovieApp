@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.movieapp.R
 import com.example.movieapp.presentation.ui.fragments.movie.MoviePopularFragment
+import com.example.movieapp.util.Constants
 
 class SettingsFragment : Fragment() {
 
@@ -17,12 +18,10 @@ class SettingsFragment : Fragment() {
     }
 
     companion object{
-        private const val CONTAINER_NAME = "container_name"
-
-        fun getNewInstance(name: String): SettingsFragment {
+        fun getInstance(name: String): SettingsFragment {
             return SettingsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(CONTAINER_NAME, name)
+                    putString(Constants.CONTAINER_NAME, name)
                 }
             }
         }
