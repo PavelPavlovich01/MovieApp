@@ -5,7 +5,7 @@ import com.example.movieapp.presentation.ui.fragments.movie.MovieComingSoonFragm
 import com.example.movieapp.presentation.ui.fragments.movie.MovieDetailFragment
 import com.example.movieapp.presentation.ui.fragments.movie.MovieFavouriteFragment
 import com.example.movieapp.presentation.ui.fragments.movie.MoviePopularFragment
-import com.example.movieapp.presentation.ui.fragments.profile.ProfileFragment
+import com.example.movieapp.presentation.ui.fragments.search.MovieSearchFragment
 import com.example.movieapp.presentation.ui.fragments.settings.SettingsFragment
 import com.example.movieapp.util.Constants
 import com.github.terrakok.cicerone.androidx.FragmentScreen
@@ -24,8 +24,8 @@ object Screens {
         MoviePopularFragment.getInstance(containerName)
     }
 
-    fun profile(containerName: String) = FragmentScreen {
-        ProfileFragment.getInstance(containerName)
+    fun search(containerName: String) = FragmentScreen {
+        MovieSearchFragment.getInstance(containerName)
     }
 
     fun settings(containerName: String) = FragmentScreen {
@@ -39,7 +39,7 @@ object Screens {
     fun tab(tabName: String) = FragmentScreen {
         when(tabName){
             Constants.MOVIES_TAB -> TabMovieBaseContainerFragment.getInstance(tabName)
-            Constants.PROFILE_TAB -> TabProfileContainerFragment.getInstance(tabName)
+            Constants.SEARCH_TAB -> TabSearchContainerFragment.getInstance(tabName)
             Constants.SETTINGS_TAB -> TabSettingsContainerFragment.getInstance(tabName)
             else -> TODO()
         }

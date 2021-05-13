@@ -4,21 +4,26 @@ import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 
 val networkModule = module{
     factory { AuthInterceptor() }
-    factory { provideOkHttpClient(get()) }
-    factory { provideMovieApi(get()) }
-    single { provideRetrofit(get()) }
+    factory { RetrofitClient.provideOkHttpClient(get()) }
+    factory {  RetrofitClient.provideMovieApi(get()) }
+    single {  RetrofitClient.provideRetrofit(get()) }
 }
 
-fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL).client(okHttpClient)
-        .addConverterFactory(MoshiConverterFactory.create()).build()
-}
+class RetrofitClient {
+    companion object{
+        fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+            return Retrofit.Builder().baseUrl(BuildConfig.BASE_URL).client(okHttpClient)
+                .addConverterFactory(MoshiConverterFactory.create()).build()
+        }
 
-fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
-    return OkHttpClient().newBuilder().addInterceptor(authInterceptor).build()
-}
+        fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
+            return OkHttpClient().newBuilder().connectTimeout(30, TimeUnit.SECONDS).addInterceptor(authInterceptor).build()
+        }
 
-fun provideMovieApi(retrofit: Retrofit): MovieApi = retrofit.create(MovieApi::class.java)
+        fun provideMovieApi(retrofit: Retrofit): MovieApi = retrofit.create(MovieApi::class.java)
+    }
+}

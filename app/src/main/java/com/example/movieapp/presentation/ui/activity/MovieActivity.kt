@@ -2,6 +2,8 @@ package com.example.movieapp.presentation.ui.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
@@ -18,19 +20,21 @@ class MovieActivity : AppCompatActivity(), RouterProvider {
     override val router: Router by inject()
 
     private lateinit var bottomNavigationBar: BottomNavigationBar
+    private lateinit var toolBar: Toolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie)
 
         bottomNavigationBar = findViewById(R.id.bottom_main_nav_bar)
+        toolBar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolBar)
 
         initBottomBar()
         if (savedInstanceState == null) {
             bottomNavigationBar.selectTab(0, true)
         }
     }
-
 
     private fun initBottomBar(){
         bottomNavigationBar.addItem(
@@ -41,7 +45,7 @@ class MovieActivity : AppCompatActivity(), RouterProvider {
 
         bottomNavigationBar.addItem(
             BottomNavigationItem(
-                R.drawable.profile, R.string.profile
+                R.drawable.search, R.string.search
             )
         )
 
@@ -56,7 +60,7 @@ class MovieActivity : AppCompatActivity(), RouterProvider {
             override fun onTabSelected(position: Int) {
                 when(position){
                     0 -> selectTab(Constants.MOVIES_TAB)
-                    1 -> selectTab(Constants.PROFILE_TAB)
+                    1 -> selectTab(Constants.SEARCH_TAB)
                     2 -> selectTab(Constants.SETTINGS_TAB)
                 }
             }
@@ -66,7 +70,6 @@ class MovieActivity : AppCompatActivity(), RouterProvider {
             override fun onTabReselected(position: Int) {
                 onTabSelected(position)
             }
-
         })
     }
 

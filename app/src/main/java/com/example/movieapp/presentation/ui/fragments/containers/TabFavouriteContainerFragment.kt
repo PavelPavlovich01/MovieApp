@@ -8,11 +8,14 @@ import com.example.movieapp.R
 import com.example.movieapp.presentation.ui.common.BackButtonListener
 import com.example.movieapp.presentation.ui.common.RouterProvider
 import com.example.movieapp.presentation.ui.Screens
+import com.example.movieapp.presentation.ui.fragments.movie.fragmentFavouriteModule
+import com.example.movieapp.presentation.ui.viewmodels.movie.MovieFavouriteViewModel
 import com.example.movieapp.util.Constants
 import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
+import org.koin.android.ext.android.inject
 
 class TabFavouriteContainerFragment : AbstractTabContainerFragment() {
 
@@ -35,6 +38,10 @@ class TabFavouriteContainerFragment : AbstractTabContainerFragment() {
         if (childFragmentManager.findFragmentById(R.id.fragment_container_favourite) == null) {
             router.replaceScreen(Screens.favourite(containerName))
         }
+    }
+
+    fun replaceScreenToDetails(movieId: Int) {
+        router.navigateTo(Screens.movieDetail(containerName, movieId))
     }
 
     override fun onBackPressed(): Boolean {

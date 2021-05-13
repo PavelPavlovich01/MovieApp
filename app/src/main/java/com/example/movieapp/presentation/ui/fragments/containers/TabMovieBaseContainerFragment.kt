@@ -1,18 +1,19 @@
 package com.example.movieapp.presentation.ui.fragments.containers
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.ashokvarma.bottomnavigation.BottomNavigationBar
 import com.ashokvarma.bottomnavigation.BottomNavigationItem
 import com.example.movieapp.R
 import com.example.movieapp.presentation.ui.Screens
 import com.example.movieapp.presentation.ui.common.BackButtonListener
 import com.example.movieapp.presentation.ui.common.RouterProvider
+import com.example.movieapp.presentation.ui.fragments.movie.MovieFavouriteFragment
+import com.example.movieapp.presentation.ui.fragments.movie.fragmentFavouriteModule
 import com.example.movieapp.util.Constants
-import com.github.terrakok.cicerone.Back
 
 class TabMovieBaseContainerFragment : Fragment(), BackButtonListener {
     private lateinit var bottomNavigationBar: BottomNavigationBar

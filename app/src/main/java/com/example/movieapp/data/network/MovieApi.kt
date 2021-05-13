@@ -1,5 +1,6 @@
 package com.example.movieapp.data.network
 
+import androidx.lifecycle.LiveData
 import com.example.movieapp.data.model.dto.MovieDto
 import com.example.movieapp.data.model.dto.MovieResponseDto
 import com.example.movieapp.data.model.dto.TrailerResponseDto
@@ -20,4 +21,7 @@ interface MovieApi {
 
     @GET("movie/upcoming")
     suspend fun getUpcomingMoviesAsync(@Query("page") page: Int) : Response<MovieResponseDto>
+
+    @GET("search/movie")
+    suspend fun searchMovieAsync(@Query("query") query: String) : Response<MovieResponseDto>
 }

@@ -1,5 +1,6 @@
 package com.example.movieapp.data.model.dto
 
+import com.example.movieapp.data.model.dvo.MovieDvo
 import com.squareup.moshi.Json
 
 data class MovieDto(
@@ -24,3 +25,18 @@ data class MovieDto(
     @field:Json(name = "genres")
     val genres: List<GenreDto>? = null
 )
+
+fun MovieDto.toMovieDvo() = MovieDvo(
+        movieId = this.movieId,
+        budget = this.budget,
+        homepage = this.homepage,
+        runtime = this.runtime,
+        title = this.title,
+        posterPath = this.posterPath,
+        overview = this.overview,
+        releaseDate = this.releaseDate,
+        voteAverage = this.voteAverage
+).apply {
+    genres = this@toMovieDvo.genres?.map { genreDto ->  genreDto.toGenreDvo(movieId!!)}
+}
+

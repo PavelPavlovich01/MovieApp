@@ -25,8 +25,8 @@ class TabPopularContainerFragment : AbstractTabContainerFragment() {
     override val cicerone: Cicerone<Router>
         get() = containerName.let { ciceroneHolder.getCicerone(it) }
 
-    fun replaceToDetails(movieId: Int) {
-        TODO("Not yet implemented")
+    fun replaceScreenToDetails(movieId: Int) {
+        router.navigateTo(Screens.movieDetail(containerName, movieId))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

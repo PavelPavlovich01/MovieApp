@@ -16,4 +16,9 @@
     <string name="companies">Production companies: </string>
     <string name="budget">"Budget: "</string>
     <string name="runtime">"Runtime: "</string>
+    <string name="share">Share</string>
+    <string name="chooserTitle">Share movie ...</string>
+    <string name="search">Search</string>
+    <string name="information">Information</string>
+    <string name="no_movies">No movies</string>
 </resources>

@@ -2,7 +2,7 @@ package com.example.movieapp.util
 
 object Constants {
     const val MOVIES_TAB = "MOVIES"
-    const val PROFILE_TAB = "PROFILE"
+    const val SEARCH_TAB = "SEARCH"
     const val SETTINGS_TAB = "SETTINGS"
     const val UPCOMING_TAB = "UPCOMING"
     const val POPULAR_TAB = "POPULAR"

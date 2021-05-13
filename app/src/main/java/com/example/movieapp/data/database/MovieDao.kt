@@ -1,24 +1,17 @@
 package com.example.movieapp.data.database
 
+import android.database.Observable
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.movieapp.data.model.dbo.MovieDbo
 import com.example.movieapp.data.relationshipsutils.MovieWithGenres
+import com.example.movieapp.util.State
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
     @Query("SELECT * FROM movie")
-    suspend fun getAllMovies(): List<MovieDbo>?
-
-    @Transaction
-    @Query("SELECT * FROM movie")
-    suspend fun getAllMoviesWithGenres(): List<MovieWithGenres>?
-
-    @Query("SELECT * FROM movie WHERE movieId = :mid")
-    suspend fun getMovieById(mid: Int): MovieDbo?
-
-    @Transaction
-    @Query("SELECT * FROM movie WHERE movieId = :mid")
-    suspend fun getMovieWithGenresById(mid: Int): MovieDbo?
+    fun getAllMovies(): Flow<List<MovieDbo>?>
 
     @Query("SELECT EXISTS (SELECT 1 FROM movie WHERE movieId = :mid)")
     suspend fun isExist(mid: Int): Boolean
@@ -29,6 +22,6 @@ interface MovieDao {
     @Insert
     suspend fun insert(movie: MovieDbo)
 
-    @Delete()
+    @Delete
     suspend fun delete(movie: MovieDbo)
 }

@@ -1,29 +1,33 @@
 package com.example.movieapp.presentation.ui.fragments.movie
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.view.*
+import android.widget.Toast
+import androidx.appcompat.widget.ShareActionProvider
+import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.example.movieapp.R
-import com.example.movieapp.data.model.dbo.MovieDbo
-import com.example.movieapp.data.model.dto.MovieDto
 import com.example.movieapp.data.model.dto.TrailerResponseDto
+import com.example.movieapp.data.model.dvo.MovieDvo
+import com.example.movieapp.data.network.ApiException
 import com.example.movieapp.data.network.BuildConfig.BASE_POSTER_URL
 import com.example.movieapp.databinding.MovieDetailFragmentBinding
 import com.example.movieapp.presentation.ui.common.BackButtonListener
 import com.example.movieapp.presentation.ui.common.RouterProvider
 import com.example.movieapp.presentation.ui.viewmodels.movie.MovieDetailViewModel
 import com.example.movieapp.util.Constants
+import com.example.movieapp.util.State
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
+
 
 val fragmentDetailModule = module {
     factory { MovieDetailFragment() }
@@ -32,72 +36,120 @@ val fragmentDetailModule = module {
 class MovieDetailFragment : Fragment(), BackButtonListener {
 
     private var flagSwap = false
+    private var url: String? = null
 
     private val movieDetailViewModel: MovieDetailViewModel by viewModel{
-        parametersOf(requireArguments().getInt(Constants.MOVIE_ID),
-                (parentFragment as RouterProvider).router)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        movieDetailViewModel.detailMovie.observe(viewLifecycleOwner, observerDetails)
-        movieDetailViewModel.trailerMovieDto.observe(viewLifecycleOwner, observerTrailer)
-        return inflater.inflate(R.layout.movie_detail_fragment, container, false)
+        parametersOf(
+            requireArguments().getInt(Constants.MOVIE_ID),
+            (parentFragment as RouterProvider).router
+        )
     }
 
     private val viewBinding by viewBinding<MovieDetailFragmentBinding>()
 
-    //TODO("Dto and Dbo objects")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        movieDetailViewModel.getMovieDetails()
+        movieDetailViewModel.detailMovie.observe(viewLifecycleOwner, { state ->
+            with(viewBinding) {
+                when (state) {
+                    is State.Loading -> {
+                        detailsLayout.setVisibility(View.GONE)
+                        progressBar.setVisibility(View.VISIBLE)
+                    }
+                    is State.Success -> {
+                        detailsLayout.setVisibility(View.VISIBLE)
+                        progressBar.setVisibility(View.GONE)
+                        observerDetails(state.data)
+                    }
+                    is State.Error -> {
+                        progressBar.setVisibility(View.GONE)
+                        Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+        movieDetailViewModel.trailerMovie.observe(viewLifecycleOwner, {state ->
+            when(state){
+                is State.Success -> {
+                    if(!state.data.trailers.isEmpty()){
+                        observerTrailer(state.data.trailers[0].key)
+                    } else {
+                        Toast.makeText(context, "No trailer for that movie", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                is State.Error -> {
+                    Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+        return inflater.inflate(R.layout.movie_detail_fragment, container, false)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.share_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_share){
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, url)
+                type = "text/plain"
+            }
+            startActivity(Intent.createChooser(sendIntent, getString(R.string.chooserTitle)))
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     @SuppressLint("SetTextI18n")
-    private val observerDetails = Observer<Any> {
+    private fun observerDetails(it: MovieDvo) {
         with(viewBinding){
-            if(it is MovieDto) {
-                movieTitleTv.text = it.title
-                movieDescriptionTv.text = it.overview
-                movieDateTv.text = context?.resources?.getString(R.string.date) + it.releaseDate
-                movieRatingTv.text = context?.resources?.getString(R.string.rating) + it.voteAverage.toString()
+            movieTitleTv.text = it.title
+            movieDescriptionTv.text = it.overview
+            movieDateTv.text = context?.resources?.getString(R.string.date) + it.releaseDate
+            movieRatingTv.text = context?.resources?.getString(R.string.rating) + it.voteAverage.toString()
+            if(it.genres != null && it.genres!!.isNotEmpty()){
                 var genres = ""
-                for (name in it.genres!!) genres += name
-                movieGenresTv.text = context?.resources?.getString(R.string.genres) + genres.subSequence(0, genres.length - 1)
-                movieBudgetTv.text = context?.resources?.getString(R.string.budget) + it.budget.toString() + "$"
-                movieRuntimeTv.text = context?.resources?.getString(R.string.runtime) + it.runtime.toString() + " min."
-                Glide.with(this@MovieDetailFragment).load(BASE_POSTER_URL + it.posterPath).into(moviePosterIv)
-                movieLikedIb.setBackgroundResource(R.drawable.notliked)
-            } else if (it is MovieDbo){
-                movieTitleTv.text = it.title
-                movieDescriptionTv.text = it.overview
-                movieDateTv.text = context?.resources?.getString(R.string.date) + it.releaseDate
-                movieRatingTv.text = context?.resources?.getString(R.string.rating) + it.voteAverage.toString()
-                var genres = ""
-                for (name in it.genres!!) genres += name
-                movieGenresTv.text = context?.resources?.getString(R.string.genres) + genres.subSequence(0, genres.length - 1)
-                movieBudgetTv.text = context?.resources?.getString(R.string.budget) + it.budget.toString() + "$"
-                movieRuntimeTv.text = context?.resources?.getString(R.string.runtime) + it.runtime.toString() + " min."
-                Glide.with(this@MovieDetailFragment).load(BASE_POSTER_URL + it.posterPath).into(moviePosterIv)
+                for (name in it.genres!!) genres = genres + name.name + ", "
+                movieGenresTv.text = context?.resources?.getString(R.string.genres) + genres.subSequence(
+                        0,
+                        genres.length - 2
+                )
+            }
+            movieBudgetTv.text = context?.resources?.getString(R.string.budget) + it.budget.toString() + "$"
+            movieRuntimeTv.text = context?.resources?.getString(R.string.runtime) + it.runtime.toString() + " min."
+            Glide.with(this@MovieDetailFragment).load(BASE_POSTER_URL + it.posterPath).into(moviePosterIv)
+            if(it.liked != null) {
                 movieLikedIb.setBackgroundResource(R.drawable.liked)
                 flagSwap = true
             }
+            url = it.homepage
 
-            movieLikedIb.setOnClickListener(object : View.OnClickListener{
+            movieLikedIb.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View?) {
                     if (flagSwap) {
                         movieLikedIb.setBackgroundResource(R.drawable.notliked)
-                    }
-                    else {
+                    } else {
                         movieLikedIb.setBackgroundResource(R.drawable.liked)
                     }
                     flagSwap = !flagSwap
                     movieDetailViewModel.onLikePressed(it)
                 }
-
             })
         }
     }
 
-    private val observerTrailer = Observer<TrailerResponseDto> {
+    private fun observerTrailer(key: String){
         with(viewBinding){
             youtubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                 override fun onReady(youTubePlayer: YouTubePlayer) {
-                    youTubePlayer.loadVideo(it.trailers[0].key , 0F)
+                    youTubePlayer.loadVideo(key, 0F)
                 }
             })
         }

@@ -5,15 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.movieapp.R
-import com.example.movieapp.presentation.ui.fragments.movie.MoviePopularFragment
+import com.example.movieapp.databinding.FragmentSettingsBinding
 import com.example.movieapp.util.Constants
 
 class SettingsFragment : Fragment() {
+    private val settingViewBinding by viewBinding<FragmentSettingsBinding>()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 

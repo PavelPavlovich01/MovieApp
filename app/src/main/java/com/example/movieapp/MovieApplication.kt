@@ -8,7 +8,10 @@ import com.example.movieapp.data.repository.movieDtoModule
 import com.example.movieapp.presentation.navigation.ciceroneModule
 import com.example.movieapp.presentation.ui.fragments.movie.fragmentComingSoonModule
 import com.example.movieapp.presentation.ui.fragments.movie.fragmentDetailModule
+import com.example.movieapp.presentation.ui.fragments.movie.fragmentFavouriteModule
 import com.example.movieapp.presentation.ui.fragments.movie.fragmentPopularModule
+import com.example.movieapp.presentation.ui.fragments.search.fragmentSearchModule
+import com.example.movieapp.presentation.ui.fragments.search.searchMovieViewModelModule
 import com.example.movieapp.presentation.ui.viewmodels.movie.detailMovieViewModelModule
 import com.example.movieapp.presentation.ui.viewmodels.movie.favouriteMovieViewModelModule
 import com.example.movieapp.presentation.ui.viewmodels.movie.popularMovieViewModelModule
@@ -31,14 +34,16 @@ class MovieApplication : Application(){
                     ciceroneModule,
 
                     fragmentComingSoonModule,
+                    fragmentFavouriteModule,
                     fragmentPopularModule,
                     fragmentDetailModule,
+                    fragmentSearchModule,
 
                     upcomingMovieViewModelModule,
                     favouriteMovieViewModelModule,
                     popularMovieViewModelModule,
-                    detailMovieViewModelModule
-
+                    detailMovieViewModelModule,
+                    searchMovieViewModelModule
             )
         }
     }

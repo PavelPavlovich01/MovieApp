@@ -1,12 +1,10 @@
 package com.example.movieapp.presentation.ui.fragments.containers
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.movieapp.R
-import com.example.movieapp.presentation.navigation.LocalCiceroneHolder
 import com.example.movieapp.presentation.ui.common.BackButtonListener
 import com.example.movieapp.presentation.ui.common.RouterProvider
 import com.example.movieapp.presentation.ui.Screens
@@ -15,12 +13,11 @@ import com.github.terrakok.cicerone.Cicerone
 import com.github.terrakok.cicerone.Navigator
 import com.github.terrakok.cicerone.Router
 import com.github.terrakok.cicerone.androidx.AppNavigator
-import org.koin.android.ext.android.inject
 
-class TabProfileContainerFragment : AbstractTabContainerFragment() {
+class TabSearchContainerFragment : AbstractTabContainerFragment() {
 
     override val navigator: Navigator by lazy {
-        AppNavigator(requireActivity(), R.id.fragment_container_profile, childFragmentManager)
+        AppNavigator(requireActivity(), R.id.fragment_container_search, childFragmentManager)
     }
 
     override val containerName: String
@@ -30,18 +27,22 @@ class TabProfileContainerFragment : AbstractTabContainerFragment() {
         get() = containerName.let { ciceroneHolder.getCicerone(it) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_tab_profile_container, container, false)
+        return inflater.inflate(R.layout.fragment_tab_search_container, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        if (childFragmentManager.findFragmentById(R.id.fragment_container_profile) == null) {
-            router.replaceScreen(Screens.profile(containerName))
+        if (childFragmentManager.findFragmentById(R.id.fragment_container_search) == null) {
+            router.replaceScreen(Screens.search(containerName))
         }
     }
 
+    fun replaceScreenToDetails(movieId: Int) {
+        router.navigateTo(Screens.movieDetail(containerName, movieId))
+    }
+
     override fun onBackPressed(): Boolean {
-        val fragment = childFragmentManager.findFragmentById(R.id.fragment_container_profile)
+        val fragment = childFragmentManager.findFragmentById(R.id.fragment_container_search)
         return if (fragment != null && fragment is BackButtonListener
             && (fragment as BackButtonListener).onBackPressed()) {
             true
@@ -53,7 +54,7 @@ class TabProfileContainerFragment : AbstractTabContainerFragment() {
 
     companion object {
         fun getInstance(tabName: String) =
-            TabProfileContainerFragment().apply {
+            TabSearchContainerFragment().apply {
                 arguments = Bundle().apply {
                     putString(Constants.CONTAINER_NAME, tabName)
                 }
