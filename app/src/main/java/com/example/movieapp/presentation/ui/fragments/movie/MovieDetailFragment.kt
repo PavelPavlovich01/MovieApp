@@ -5,16 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
-import androidx.appcompat.widget.ShareActionProvider
-import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.bumptech.glide.Glide
 import com.example.movieapp.R
-import com.example.movieapp.data.model.dto.TrailerResponseDto
 import com.example.movieapp.data.model.dvo.MovieDvo
-import com.example.movieapp.data.network.ApiException
 import com.example.movieapp.data.network.BuildConfig.BASE_POSTER_URL
 import com.example.movieapp.databinding.MovieDetailFragmentBinding
 import com.example.movieapp.presentation.ui.common.BackButtonListener
@@ -27,7 +22,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
-
 
 val fragmentDetailModule = module {
     factory { MovieDetailFragment() }
@@ -48,21 +42,26 @@ class MovieDetailFragment : Fragment(), BackButtonListener {
     private val viewBinding by viewBinding<MovieDetailFragmentBinding>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         movieDetailViewModel.getMovieDetails()
+        return inflater.inflate(R.layout.movie_detail_fragment, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         movieDetailViewModel.detailMovie.observe(viewLifecycleOwner, { state ->
             with(viewBinding) {
                 when (state) {
                     is State.Loading -> {
-                        detailsLayout.setVisibility(View.GONE)
-                        progressBar.setVisibility(View.VISIBLE)
+                        detailsLayout.visibility = View.GONE
+                        progressBar.visibility = View.VISIBLE
                     }
                     is State.Success -> {
-                        detailsLayout.setVisibility(View.VISIBLE)
-                        progressBar.setVisibility(View.GONE)
+                        detailsLayout.visibility = View.VISIBLE
+                        progressBar.visibility = View.GONE
                         observerDetails(state.data)
                     }
                     is State.Error -> {
-                        progressBar.setVisibility(View.GONE)
+                        progressBar.visibility = View.GONE
                         Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -71,7 +70,7 @@ class MovieDetailFragment : Fragment(), BackButtonListener {
         movieDetailViewModel.trailerMovie.observe(viewLifecycleOwner, {state ->
             when(state){
                 is State.Success -> {
-                    if(!state.data.trailers.isEmpty()){
+                    if(state.data.trailers.isNotEmpty()){
                         observerTrailer(state.data.trailers[0].key)
                     } else {
                         Toast.makeText(context, "No trailer for that movie", Toast.LENGTH_SHORT).show()
@@ -82,12 +81,6 @@ class MovieDetailFragment : Fragment(), BackButtonListener {
                 }
             }
         })
-        return inflater.inflate(R.layout.movie_detail_fragment, container, false)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -126,18 +119,14 @@ class MovieDetailFragment : Fragment(), BackButtonListener {
             movieRuntimeTv.text = context?.resources?.getString(R.string.runtime) + it.runtime.toString() + " min."
             Glide.with(this@MovieDetailFragment).load(BASE_POSTER_URL + it.posterPath).into(moviePosterIv)
             if(it.liked != null) {
-                movieLikedIb.setBackgroundResource(R.drawable.liked)
+                movieLikedIb.isSelected = true
                 flagSwap = true
             }
             url = it.homepage
 
             movieLikedIb.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View?) {
-                    if (flagSwap) {
-                        movieLikedIb.setBackgroundResource(R.drawable.notliked)
-                    } else {
-                        movieLikedIb.setBackgroundResource(R.drawable.liked)
-                    }
+                    movieLikedIb.isSelected = !flagSwap
                     flagSwap = !flagSwap
                     movieDetailViewModel.onLikePressed(it)
                 }

@@ -17,6 +17,6 @@ interface GenreDao {
     @Insert
     suspend fun insert(genre: GenreDbo)
 
-    @Delete()
+    @Delete
     suspend fun delete(genre: GenreDbo)
 }

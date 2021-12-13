@@ -62,9 +62,5 @@ class TabFavouriteContainerFragment : AbstractTabContainerFragment() {
                     putString(Constants.CONTAINER_NAME, tabName)
                 }
             }
-
-        fun replaceToDetails(movieId: Int) {
-            TODO("Not yet implemented")
-        }
     }
 }

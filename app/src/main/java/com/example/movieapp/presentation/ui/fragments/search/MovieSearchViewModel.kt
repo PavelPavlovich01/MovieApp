@@ -3,8 +3,7 @@ package com.example.movieapp.presentation.ui.fragments.search
 import androidx.lifecycle.*
 import com.example.movieapp.data.model.dto.toMovieDvo
 import com.example.movieapp.data.model.dvo.MovieDvo
-import com.example.movieapp.data.repository.MovieDtoRepository
-import com.example.movieapp.presentation.ui.fragments.containers.TabComingSoonContainerFragment
+import com.example.movieapp.data.repository.remote.MovieDtoRepository
 import com.example.movieapp.presentation.ui.fragments.containers.TabSearchContainerFragment
 import com.example.movieapp.util.Constants
 import com.github.terrakok.cicerone.Router

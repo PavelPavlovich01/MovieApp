@@ -1,4 +1,4 @@
-package com.example.movieapp.data.repository
+package com.example.movieapp.data.repository.remote
 
 import com.example.movieapp.data.model.dto.MovieDto
 import com.example.movieapp.data.model.dto.MovieResponseDto
@@ -6,7 +6,6 @@ import com.example.movieapp.data.model.dto.TrailerResponseDto
 import com.example.movieapp.data.network.MovieApi
 import com.example.movieapp.data.network.SafeApiRequest
 import org.koin.dsl.module
-import retrofit2.http.Query
 
 val movieDtoModule = module {
     factory { MovieDtoRepository(get()) }

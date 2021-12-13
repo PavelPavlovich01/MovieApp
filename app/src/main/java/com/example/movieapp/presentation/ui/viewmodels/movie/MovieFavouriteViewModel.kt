@@ -1,24 +1,17 @@
 package com.example.movieapp.presentation.ui.viewmodels.movie
 
-import android.database.Observable
-import android.net.sip.SipSession
 import androidx.lifecycle.*
-import com.example.movieapp.data.model.dbo.MovieDbo
 import com.example.movieapp.data.model.dbo.toMovieDvo
 import com.example.movieapp.data.model.dvo.MovieDvo
 import com.example.movieapp.data.network.DataBaseException
-import com.example.movieapp.data.repository.MovieDboRepository
-import com.example.movieapp.presentation.ui.fragments.containers.TabComingSoonContainerFragment
+import com.example.movieapp.data.repository.local.MovieDboRepository
 import com.example.movieapp.presentation.ui.fragments.containers.TabFavouriteContainerFragment
 import com.example.movieapp.util.Constants
 import com.example.movieapp.util.State
 import com.github.terrakok.cicerone.Router
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import org.koin.ext.scope
 import kotlin.system.exitProcess
 
 val favouriteMovieViewModelModule = module {

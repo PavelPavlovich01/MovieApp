@@ -5,17 +5,13 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
-import com.example.movieapp.presentation.navigation.LocalCiceroneHolder
-import com.github.terrakok.cicerone.Router
-import org.koin.android.ext.android.inject
 
 class SplashScreenActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
@@ -23,9 +19,9 @@ class SplashScreenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        startAnimation(findViewById(R.id.dot_left), 500)
-        startAnimation(findViewById(R.id.dot_center), 500)
-        startAnimation(findViewById(R.id.dot_right), 500)
+        startAnimation(findViewById(R.id.dot_left))
+        startAnimation(findViewById(R.id.dot_center))
+        startAnimation(findViewById(R.id.dot_right))
 
         val intent = Intent(this, MovieActivity::class.java)
 
@@ -38,13 +34,11 @@ class SplashScreenActivity : AppCompatActivity() {
                 Toast.makeText(baseContext, "No Network Connect", Toast.LENGTH_SHORT).show()
             }
         })
-
-
     }
 
-    private fun startAnimation(imageView: ImageView, duration: Long){
+    private fun startAnimation(imageView: ImageView){
         val fadeInAnimation = AnimationUtils.loadAnimation(this , R.anim.fadein)
-        fadeInAnimation.duration = duration
+        fadeInAnimation.duration = 500
         imageView.startAnimation(fadeInAnimation)
     }
 }

@@ -7,8 +7,7 @@ import com.github.terrakok.cicerone.Router
 class LocalCiceroneHolder : Application() {
     private val containers = HashMap<String, Cicerone<Router>>()
 
-    fun getCicerone(containerTag: String): Cicerone<Router> =
-            containers.getOrPut(containerTag) {
-                Cicerone.create()
-            }
+    fun getCicerone(containerTag: String): Cicerone<Router> = containers.getOrPut(containerTag) {
+        Cicerone.create()
+    }
 }

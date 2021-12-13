@@ -3,8 +3,8 @@ package com.example.movieapp
 import android.app.Application
 import com.example.movieapp.data.database.databaseModule
 import com.example.movieapp.data.network.networkModule
-import com.example.movieapp.data.repository.movieDboBModule
-import com.example.movieapp.data.repository.movieDtoModule
+import com.example.movieapp.data.repository.local.movieDboBModule
+import com.example.movieapp.data.repository.remote.movieDtoModule
 import com.example.movieapp.presentation.navigation.ciceroneModule
 import com.example.movieapp.presentation.ui.fragments.movie.fragmentComingSoonModule
 import com.example.movieapp.presentation.ui.fragments.movie.fragmentDetailModule

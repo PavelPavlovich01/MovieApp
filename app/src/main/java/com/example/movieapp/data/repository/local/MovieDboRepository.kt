@@ -1,10 +1,7 @@
-package com.example.movieapp.data.repository
+package com.example.movieapp.data.repository.local
 
-import android.database.Observable
-import androidx.lifecycle.LiveData
 import com.example.movieapp.data.database.MovieDao
 import com.example.movieapp.data.model.dbo.MovieDbo
-import com.example.movieapp.util.State
 import kotlinx.coroutines.flow.Flow
 import org.koin.dsl.module
 

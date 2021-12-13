@@ -9,6 +9,7 @@ import com.example.movieapp.presentation.ui.fragments.search.MovieSearchFragment
 import com.example.movieapp.presentation.ui.fragments.settings.SettingsFragment
 import com.example.movieapp.util.Constants
 import com.github.terrakok.cicerone.androidx.FragmentScreen
+import java.lang.Exception
 
 object Screens {
 
@@ -41,7 +42,7 @@ object Screens {
             Constants.MOVIES_TAB -> TabMovieBaseContainerFragment.getInstance(tabName)
             Constants.SEARCH_TAB -> TabSearchContainerFragment.getInstance(tabName)
             Constants.SETTINGS_TAB -> TabSettingsContainerFragment.getInstance(tabName)
-            else -> TODO()
+            else -> throw Exception("Invalid tab")
         }
     }
 
@@ -50,7 +51,7 @@ object Screens {
             Constants.UPCOMING_TAB -> TabComingSoonContainerFragment.getInstance(tabName)
             Constants.POPULAR_TAB -> TabPopularContainerFragment.getInstance(tabName)
             Constants.FAVOURITE_TAB -> TabFavouriteContainerFragment.getInstance(tabName)
-            else -> TODO()
+            else -> throw Exception("Invalid movie tab")
         }
     }
 }

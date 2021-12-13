@@ -49,7 +49,8 @@
                                 android:layout_marginEnd="16dp"
                                 android:layout_gravity="center"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                                android:textSize="25sp"/>
+                                android:textSize="25sp"
+                                android:textAlignment="center"/>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -143,7 +144,8 @@
                                     android:id="@+id/movie_liked_ib"
                                     android:layout_width="60dp"
                                     android:layout_height="60dp"
-                                    android:background="@drawable/notliked"
+                                    android:state_active="false"
+                                    android:background="@drawable/like_selector"
                                     android:scaleType="centerInside"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintTop_toTopOf="parent" />

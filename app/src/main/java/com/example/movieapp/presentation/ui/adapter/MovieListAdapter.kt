@@ -1,121 +1,54 @@
 package com.example.movieapp.presentation.ui.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.core.view.isVisible
-import androidx.paging.LoadState
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.movieapp.R
 import com.example.movieapp.data.model.dvo.MovieDvo
-import com.example.movieapp.data.network.BuildConfig
+import com.example.movieapp.data.network.BuildConfig.BASE_POSTER_URL
+import com.example.movieapp.databinding.MovieCardviewBinding
 
-class MovieListAdapter : PagingDataAdapter<MovieDvo, RecyclerView.ViewHolder>(DataDifferntiator) {
+class MovieListAdapter : ListAdapter<MovieDvo, MovieListAdapter.ViewHolder>(DIFF_UTIL){
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListAdapter.ViewHolder {
+        return ViewHolder(MovieCardviewBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    }
 
-    companion object{
-        const val LOADING_LAYOUT = 0
-        const val LIST_LAYOUT = 1
+    override fun onBindViewHolder(holder: MovieListAdapter.ViewHolder, position: Int) {
+        getItem(position)?.let { holder.bind(it) }
+    }
+
+    inner class ViewHolder(private val binding: MovieCardviewBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener{
+        fun bind (item: MovieDvo) = with(binding){
+            Glide.with(moviePosterIv.context).load(BASE_POSTER_URL + item.posterPath).into(moviePosterIv)
+            movieTitleTv.text = item.title
+            movieDescriptionTv.text = item.overview
+            movieRatingTv.text = item.voteAverage.toString()
+            binding.root.setOnClickListener(this@ViewHolder)
+        }
+
+        override fun onClick(v: View) {
+            myOnItemClickLister.onItemClicked(v, currentList[position].movieId!!)
+        }
     }
 
     private lateinit var  myOnItemClickLister: OnItemClickListener
-    private val movies = ArrayList<MovieDvo>()
 
     interface OnItemClickListener {
-        fun onItemClicked(movieId: Int)
+        fun onItemClicked(view: View, movieId: Int)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         myOnItemClickLister = listener
     }
 
-    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
-        var poster: ImageView
-        var title: TextView
-        var description: TextView
-        var rating: TextView
+    companion object {
+        private val DIFF_UTIL  = object : DiffUtil.ItemCallback<MovieDvo>() {
+            override fun areItemsTheSame(oldItem: MovieDvo, newItem: MovieDvo): Boolean = oldItem.movieId == newItem.movieId
 
-        init {
-            poster = view.findViewById(R.id.movie_poster_iv)
-            title = view.findViewById(R.id.movie_title_tv)
-            description = view.findViewById(R.id.movie_description_tv)
-            rating = view.findViewById(R.id.movie_rating_tv)
-        }
-
-        @SuppressLint("SetTextI18n")
-        fun bindItem(movie: MovieDvo){
-            Glide.with(poster.context).load(BuildConfig.BASE_POSTER_URL + movie.posterPath).into(poster)
-            title.text = movie.title
-            description.text = movie.overview
-            rating.text = /*resources.getString(R.string.rating) +*/"Rating: " + movie.voteAverage.toString()
+            override fun areContentsTheSame(oldItem: MovieDvo, newItem: MovieDvo): Boolean = oldItem == newItem
         }
     }
-
-    inner class LoadStateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val progressBar: ProgressBar = itemView.findViewById(R.id.progress_bar)
-
-        fun bindLoad() {
-            progressBar.setVisibility(View.VISIBLE)
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType){
-            LIST_LAYOUT -> {
-                ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.movie_cardview, parent, false))
-            }
-            LOADING_LAYOUT -> {
-                LoadStateViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.list_item_loading, parent, false))
-            }
-            else -> throw IllegalArgumentException("Invalid view type")
-        }
-    }
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val element = getItem(position)
-        when (holder.itemViewType) {
-            LIST_LAYOUT -> {
-                (holder as ViewHolder).apply {
-                    bindItem(element!!)
-                    movies.add(element)
-                    itemView.setOnClickListener {
-                        myOnItemClickLister.onItemClicked(element.movieId!!)
-                    }
-                }
-            }
-
-            LOADING_LAYOUT -> {
-                (holder as LoadStateViewHolder).apply {
-                    bindLoad()
-                }
-            }
-
-        }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return if (movies.size == 0){
-            LIST_LAYOUT
-        } else {
-            LIST_LAYOUT
-        }
-    }
-
-    object DataDifferntiator : DiffUtil.ItemCallback<MovieDvo>() {
-
-        override fun areItemsTheSame(oldItem: MovieDvo, newItem: MovieDvo): Boolean {
-            return oldItem.movieId == newItem.movieId
-        }
-
-        override fun areContentsTheSame(oldItem: MovieDvo, newItem: MovieDvo): Boolean {
-            return oldItem == newItem
-        }
-    }
-
 }

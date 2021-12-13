@@ -9,8 +9,8 @@ import com.example.movieapp.data.model.dvo.toMovieDbo
 import com.example.movieapp.data.model.mapper.toMovieDbo
 import com.example.movieapp.data.network.ApiException
 import com.example.movieapp.data.network.NoInternetExсeption
-import com.example.movieapp.data.repository.MovieDboRepository
-import com.example.movieapp.data.repository.MovieDtoRepository
+import com.example.movieapp.data.repository.local.MovieDboRepository
+import com.example.movieapp.data.repository.remote.MovieDtoRepository
 import com.example.movieapp.util.State
 import com.github.terrakok.cicerone.Router
 import kotlinx.coroutines.Dispatchers
@@ -37,7 +37,7 @@ class MovieDetailViewModel(private val movieDtoRepository: MovieDtoRepository,
     fun getMovieDetails(){
         _detailMovie.postValue(State.loading())
         _trailerMovie.postValue(State.loading())
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 if(!movieDboRepository.isExist(movieId)){
                     _detailMovie.postValue(State.success(movieDtoRepository.getMovieById(movieId).toMovieDvo()))
